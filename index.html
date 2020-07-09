@@ -87,51 +87,16 @@
     <div class="article-entry" itemprop="articleBody">
       
         <p>—-Vue 篇—-</p>
-<p>1，vue 的生命周期？<br>vue 的生命周期主要分为几个简单，数据初始化，dom 挂载，数据更新，组件卸载， 在一个就是开启了组件缓存的时候，会有组件启用和组件停用阶段，每个阶段都去前 后两个钩子除了缓存的那俩 数据初始化阶段 beforeCreate：在实例初始化之后，数据观测 (data observer) 和 event/watcher 事 件配置之前被调用。 created：实例已经创建完成之后被调用。在这一步，实例已完成以下的配置：数据观 测 (data observer)，属性和方法的运算，watch/event 事件回调。然而，挂载阶段 还没开始，$el 属性目前不可见。 dom 挂载阶段 beforeMount：在挂载开始之前被调用：相关的 render 函数首次被调用。 mounted：el 被新创建的 vm.$el 替换，并挂载到实例上去之后调用该钩子。如果 root 实例挂载了一个文档内元素，当 mounted 被调用时 vm.$el 也在文档内。 mounted 不会承诺所有的子组件也都一起被挂载。如果你希望等到整个视图都渲染 完毕，可以用 vm.$nextTick 替换掉 mounted 数据跟新阶段 beforeUpdate：数据更新时调用，发生在虚拟 DOM 重新渲染和打补丁之前。 updated：由于数据更改导致的虚拟 DOM 重新渲染和打补丁，在这之后会调用该钩 子。当这个钩子被调用时，组件 DOM 已经更新，所以你现在可以执行依赖于 DOM 的操 作。然而在大多数情况下，你应该避免在此期间更改状态。如果要相应状态改变，通 常最好使用计算属性或 watcher 取而代之。 updated 不会承诺所有的子组件也都一起被重绘。如果你希望等到整个视图都重绘完 毕，可以用 vm.$nextTick 替换掉 updated： 缓存启用的时候会有下面两个钩子 activated：keep-alive 组件激活时调用。 deactivated：keep-alive 组件停用时调用。 组件卸载的时候： beforeDestroy：实例销毁之前调用。在这一步，实例仍然完全可用。 202<br>destroyed：Vue 实例销毁后调用。调用后，Vue 实例指示的所有东西都会解绑定， 所有的事件监听器会被移除，所有的子实例也会被销毁。</p>
+<p>1，vue 的生命周期？<br>   vue 的生命周期主要分为几个简单，数据初始化，dom 挂载，数据更新，组件卸载， 在一个就是开启了组件缓存的时候，会有组件启用和组件停用阶段，每个阶段都去前 后两个钩子除了缓存的那俩</p>
+<p>   数据初始化阶段<br>      beforeCreate：在实例初始化之后，数据观测 (data observer) 和 event/watcher 事 件配置之前被调用。<br>      created：实例已经创建完成之后被调用。在这一步，实例已完成以下的配置：数据观 测 (data observer)，属性和方法的运算，watch/event 事件回调。然而，挂载阶段 还没开始，$el 属性目前不可见.<br>  dom 挂载阶段<br>      beforeMount：在挂载开始之前被调用：相关的 render 函数首次被调用。<br>      mounted：el 被新创建的 vm.$el 替换，并挂载到实例上去之后调用该钩子。如果 root 实例挂载了一个文档内元素，当 mounted 被调用时 vm.$el 也在文档内。 mounted 不会承诺所有的子组件也都一起被挂载。如果你希望等到整个视图都渲染 完毕，可以用 vm.$nextTick 替换掉 mounted<br>  数据更新阶段<br>      beforeUpdate：数据更新时调用，发生在虚拟 DOM 重新渲染和打补丁之前。 updated：由于数据更改导致的虚拟 DOM 重新渲染和打补丁，在这之后会调用该钩 子。当这个钩子被调用时，组件 DOM 已经更新，所以你现在可以执行依赖于 DOM 的操 作。然而在大多数情况下，你应该避免在此期间更改状态。如果要相应状态改变，通 常最好使用计算属性或 watcher 取而代之。 updated 不会承诺所有的子组件也都一起被重绘。如果你希望等到整个视图都重绘完 毕，可以用 vm.$nextTick 替换掉 updated<br>  缓存启用的时候会有下面两个钩子<br>      activated：keep-alive 组件激活时调用。<br>      deactivated：keep-alive 组件停用时调用.<br>  组件卸载的时候:<br>      beforeDestroy：实例销毁之前调用。在这一步，实例仍然完全可用。 202<br>      destroyed：Vue 实例销毁后调用。调用后，Vue 实例指示的所有东西都会解绑定， 所有的事件监听器会被移除，所有的子实例也会被销毁。</p>
 <p>2，vue 实现数据双向绑定的原理 vue 实现数据双向绑定主要是采用数据劫持结合发布者-订阅者模式的方式，通过 Object.defineProperty()来劫持各个属性的 setter，getter，在数据变动时发布消息 给订阅者，触发相应的监听回调。具体话其实就是通过 Obeject.defineProperty() 中 的 setter 和 getter 来监听属性变动实现 Observer 进行数据的监听然后就是通知订阅 者，那么订阅者其实就是简单的一个数组，这个数组中的内容就是我门使用了的一个 数据的集合，使用了的数据可以通过 getter 得到，其实就是在调用的时候给数组里面 添加一个订阅者这样就是实现了一个 Watcher（需要监听的数据的集合），然后在实 现一个 Compile 其作用就是解析模板指令，将模板中的变量替换成数据，然后初始化 渲染页面视图，并将每个指令对应的节点绑定更新函数，添加监听数据的订阅者，一 旦数据有变动，收到通知，更新视图，其实 vue 的数据双向绑定就是 MVVM 作为数 据绑定的入口，整合 Observer、Compile 和 Watcher 三者，通过 Observer 来监听 自己的 model 数据变化，通过 Compile 来解析编译模板指令，最终利用 Watcher 搭 起 Observer 和 Compile 之间的通信桥梁，达到数据变化 -&gt; 视图更新；视图交互变 化(input) -&gt; 数据 model 变更的双向绑定效果。</p>
 <p>3，vue 路由的实现原理 在 vue 中路由主要有 hash 与 History interface 两种方式实现前端路由，单页路由的 特点就是采用前端路由系统，通过改变 URL，在不重新请求页面的情况下，更新页面 视图。目前在浏览器环境中这一功能的实现主要有两种方式：hash 和 History interface，这两种模式的实现分别是 先说 hash，在浏览器的 url 中 hash（“#”）符号的本来作用是加在 URL 中指示网 页中的位置：#符号本身以及它后面的字符称之为 hash，可通过 window.location.hash 属性读取。它具几个特点就是：hash 虽然出现在 URL 中，但 不会被包括在 HTTP 请求中。它是用来指导浏览器动作的，对服务器端完全无用，因 此，改变 hash 不会重新加载页面，并且可以为 hash 的改变添加 hashchange 监听 事件，在一个就是每一次改变 hash（window.location.hash），都会在浏览器的访 问历史中增加一个记录，我就可以通过他的这几个特点实现一个 hash 模式的单页路 由，通过对 location.hash 的修改实现 push 方法（跳转页面），通过对 203<br>location.href 的修改实现 replace()方法，通过对 hashchange 事件的监听实现页面 跳转后的数据更新 而 History 模式则是完全采用了 h5 的新特性，从 HTML5 开始，History interface 提供了两个新的方法：pushState(), replaceState()使得我们可以对浏览器历史记录栈 进行修改，以及 popState 事件可以监听到状态的变更 不过 history 模式有一个问题就是 对于单页应用来讲，理想的使用场景是仅在进入应用时加载 index.html，后续在的网 络操作通过 Ajax 完成，不会根据 URL 重新请求页面，但是如果用户直接在地址栏中 输入并回车，浏览器重启重新加载的时候 history 模式则会将 URL 修改得就和正常请 求后端的 URL 一样，在此情况下重新向后端发送请求，如后端没有配置对应 的路由 处理，则会返回 404 错误。这种问题的解决，一般情况下我们都是在后端进行配置， 将所有的路由请求都指向 index.html 文件</p>
+<p>4，vue 组件的通讯？ 1.父组件传子组件 单项数据流 props 使用 refs 访问子组件 使用$parent 访问父组件 使用$children 访问子组件 使用$root 访问当前组件树的根 Vue 实例 在 template 元素使用 scope 可以访问到子组件中 slot 元素的属性值 要 13k 2.子组件传递数据给父组件： 子组件通过事件给父组件传数据，子组件通过$emit（eventName）触发事件，父 组件通过$on 监听事件 3.兄弟组件间通信 ①用事件发布订阅 var bus=new vue（）；bus.$emit(“id-selected”,1)；bus.$on （”id-selected”,function(id){}） 204<br>②用 vuex 来实现</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/07/09/vue/" data-id="ckce4g6cq0002m0v9fss6721o" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-one" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/07/08/one/" class="article-date">
-  <time datetime="2020-07-08T12:18:46.000Z" itemprop="datePublished">2020-07-08</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/07/08/one/">one</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>—-博客第一篇测试文章—-</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/07/08/one/" data-id="ckce4g6cj0001m0v98kj81smk" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/07/09/vue/" data-id="ckce6djxg0001jkv94u4q6spy" class="article-share-link">Share</a>
       
       
     </footer>
@@ -180,7 +145,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/07/08/hello-world/" data-id="ckce4g6c20000m0v946v8crnh" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/07/08/hello-world/" data-id="ckce6djwz0000jkv9ec35cmrp" class="article-share-link">Share</a>
       
       
     </footer>
@@ -222,10 +187,6 @@
         
           <li>
             <a href="/2020/07/09/vue/">vue</a>
-          </li>
-        
-          <li>
-            <a href="/2020/07/08/one/">one</a>
           </li>
         
           <li>
